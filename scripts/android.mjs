@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const { version } = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'))
 const mode = process.argv[2]
 if (!['sync', 'apk'].includes(mode)) throw new Error('用法：npm run android:sync 或 npm run android:apk')
 
@@ -37,7 +38,7 @@ try {
       // cmd 仅执行固定的 Gradle 入口与参数；不拼接文件操作或不可信参数。
       run(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'gradlew.bat assembleDebug --no-daemon'], android)
     } else run('sh', ['./gradlew', 'assembleDebug', '--no-daemon'], android)
-    const output = path.join(root, 'artifacts', 'shangzhuo-0.1.0-debug.apk')
+    const output = path.join(root, 'artifacts', `shangzhuo-${version}-debug.apk`)
     await mkdir(path.dirname(output), { recursive: true })
     await copyFile(path.join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk'), output)
     console.log(`可安装的调试 APK：${output}`)

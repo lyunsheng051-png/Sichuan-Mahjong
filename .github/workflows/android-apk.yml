@@ -2,6 +2,11 @@ name: Android APK
 
 on:
   workflow_dispatch:
+    inputs:
+      verify_native_ui:
+        description: '在 Android 35 模拟器验证窗口与退出入口'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -44,6 +49,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Read app version
+        id: app
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
       - name: Check types
         run: npm run typecheck
 
@@ -64,23 +75,59 @@ jobs:
         run: npm run android:apk
 
       - name: Verify APK and generate checksum
+        env:
+          APP_VERSION: ${{ steps.app.outputs.version }}
         run: |
-          report=$("$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs artifacts/shangzhuo-0.1.0-debug.apk)
+          apk="shangzhuo-${APP_VERSION}-debug.apk"
+          report=$("$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "artifacts/$apk")
           printf '%s\n' "$report"
           expected=$(keytool -exportcert -keystore "$SHANGZHUO_DEBUG_KEYSTORE" -storepass android -alias androiddebugkey | sha256sum | cut -d ' ' -f 1)
           actual=$(printf '%s\n' "$report" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')
           test "$expected" = "$actual" || { echo 'APK signing certificate differs from the persistent key'; exit 1; }
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging artifacts/shangzhuo-0.1.0-debug.apk
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "artifacts/$apk"
           cd artifacts
-          sha256sum shangzhuo-0.1.0-debug.apk > SHA256SUMS.txt
+          sha256sum "$apk" > SHA256SUMS.txt
+
+      - name: Enable KVM for UI verification
+        if: inputs.verify_native_ui
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Verify native window and exit on Android 35
+        if: inputs.verify_native_ui
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          script: |
+            sh ./android/gradlew -p android connectedDebugAndroidTest --no-daemon
+            mkdir -p .tools/native-ui
+            adb pull /sdcard/Android/data/io.github.lyunsheng051.shangzhuo/files/native-ui/. .tools/native-ui/
+
+      - name: Upload native UI evidence
+        if: always() && inputs.verify_native_ui
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: shangzhuo-native-ui-${{ steps.app.outputs.version }}-${{ github.run_number }}
+          path: |
+            .tools/native-ui/
+            android/app/build/outputs/androidTest-results/connected/
+            android/app/build/reports/androidTests/connected/
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Upload APK
         id: upload
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: shangzhuo-android-0.1.0-${{ github.run_number }}
+          name: shangzhuo-android-${{ steps.app.outputs.version }}-${{ github.run_number }}
           path: |
-            artifacts/shangzhuo-0.1.0-debug.apk
+            artifacts/shangzhuo-${{ steps.app.outputs.version }}-debug.apk
             artifacts/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 7

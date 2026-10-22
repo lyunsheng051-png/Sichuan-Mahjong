@@ -134,7 +134,9 @@ npm run dev
 
 **已验证构建：** [2026-10-22 · v0.1.0](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39722626363) 已通过云端原生编译、APK 签名验证及固定签名证书比对。尚未做安卓真机验证。
 
-**云端打包：** 打开 [Android APK 工作流](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml)，点击 **Run workflow**。成功后从该次运行的 **Artifacts** 下载 `shangzhuo-android-0.1.0-…`，解压后将 APK 传到手机安装；附件保存7天，过期可重新运行。
+v0.1.1 修正安卓启动主题导致的顶部图标横条，并在导航栏底部新增带确认弹窗的“退出”入口；保留原包名和签名，可覆盖更新。
+
+**云端打包：** 打开 [Android APK 工作流](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml)，点击 **Run workflow**。成功后从该次运行的 **Artifacts** 下载 `shangzhuo-android-0.1.1-…`，解压后将 APK 传到手机安装；附件保存7天，过期可重新运行。
 
 工作流使用 Ubuntu、JDK 21 和 Android SDK Platform 36，先检查类型，再编译离线资源并校验 APK 签名，附带 SHA256 校验文件。签名密钥保存在仓库 Secret 中，不包含在源码或下载附件里。尚未做安卓真机验证。完整配置、安装和签名更新说明见[安卓文档](docs/android.md)。
 

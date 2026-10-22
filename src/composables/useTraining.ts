@@ -5,9 +5,11 @@ import { claimOptions, countsOf, discardOptions, exchangeLegal, sameSet, suitOf,
 import { createQuestion, exchangeReceive } from '../services/questions'
 import type { Mode, Question, Rules } from '../types/mahjong'
 import { useProgress } from './useProgress'
+import { useNativeApp } from './useNativeApp'
 
 export function useTraining() {
   const route = useRoute()
+  const { exitPromptOpen } = useNativeApp()
   const { preferences, attempts, addAttempt } = useProgress()
   const mode = computed<Mode>(() => MODES.some(m => m.id === route.params.mode) ? route.params.mode as Mode : 'memory')
   const info = computed(() => MODES.find(m => m.id === mode.value)!)
@@ -42,7 +44,7 @@ export function useTraining() {
     phase.value = mustStudy ? 'study' : 'answer'
     seconds.value = preferences.value.studySeconds
     responseStarted.value = Date.now()
-    if (mustStudy) timer = setInterval(() => { if (studyPaused.value) return; seconds.value--; if (seconds.value <= 0) finishStudy() }, 1000)
+    if (mustStudy) timer = setInterval(() => { if (studyPaused.value || exitPromptOpen.value) return; seconds.value--; if (seconds.value <= 0) finishStudy() }, 1000)
   }
   watch(() => [route.params.mode, route.query.retry], (current, previous) => {
     if (current[0] !== previous?.[0]) { sessionCount.value = 0; sessionCorrect.value = 0 }

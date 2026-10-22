@@ -1,0 +1,14 @@
+:root {
+  --paper: #f5f7f2;
+  --ink: #263d34;
+  --muted: #788379;
+  --green: #326849;
+  --deep-green: #1e4b39;
+  --felt: #286151;
+  --gold: #dbc27c;
+  --focus: #c49732;
+  --line: #e0e6dc;
+  --body-font: 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+  --display-font: 'STKaiti', 'KaiTi', 'Songti SC', serif;
+  --number-font: 'Consolas', 'SFMono-Regular', monospace;
+}

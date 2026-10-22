@@ -93,7 +93,7 @@ artifacts/shangzhuo-0.1.2-debug.apk
 
 本地脚本只在 `artifacts/` 生成 APK；云端工作流将 APK 上传到该次运行的 Artifacts。
 
-## 本次验证范围
+## 构建与检查记录
 
 - `npm run typecheck` 通过。
 - 浏览器核对740×360、844×390横屏：手牌完整显示、按花色切换保留选择、提交判分、解析区滚动与底部下一题按钮。
@@ -101,6 +101,8 @@ artifacts/shangzhuo-0.1.2-debug.apk
 - 2026-10-22：[v0.1.0 云端构建成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39722626363)，完成离线网页编译、Capacitor 同步、Gradle 原生编译、APK 签名验证及固定签名证书比对；输出附件 `shangzhuo-android-0.1.0-3`。
 - 2026-10-22：[v0.1.1 打包成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39727492072)，本次未运行云端模拟器或 UI 测试，输出附件 `shangzhuo-android-0.1.1-9`。
 - v0.1.1 安装包约5.21 MB，已核对包名、版本 `0.1.1` / `2`、离线资源与 SHA256。华为等实际设备的显示效果仍需安装核对。
+
+- 2026-10-22：[v0.1.2 打包成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39732601865)，版本 `0.1.2` / `3`；完成类型检查、资源编译和 APK 打包，未运行云端模拟器或界面验证。
 
 ## 参考
 

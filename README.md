@@ -134,6 +134,8 @@ npm run dev
 
 v0.1.2 将首页、记录、验牌改为横屏一屏工作区：首页同时展示统计与五个训练入口，记录使用卡片分页与牌面弹窗，验牌左右分栏并切换听口和拆解，主要操作固定在视窗内。保留原包名和签名，可覆盖更新。后续修复完成后仅编译打包，不运行云端模拟器或界面回归，安装效果由使用者验证。
 
+[v0.1.2 打包与下载记录](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39732601865)。本次仅编译打包，安装后的显示与交互由使用者验证。
+
 **云端打包：** 打开 [Android APK 工作流](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml)，点击 **Run workflow**。成功后从该次运行的 **Artifacts** 下载 `shangzhuo-android-0.1.2-…`，解压后将 APK 传到手机安装；附件保存7天，过期可重新运行。
 
 工作流使用 Ubuntu、JDK 21 和 Android SDK Platform 36，先检查类型，再编译离线资源并校验 APK 签名，附带 SHA256 校验文件。签名密钥保存在仓库 Secret 中，不包含在源码或下载附件里。尚未做安卓真机验证。完整配置、安装和签名更新说明见[安卓文档](docs/android.md)。

@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
   server: { androidScheme: 'https' },
   android: { allowMixedContent: false, minWebViewVersion: 109 },
   plugins: {
-    SystemBars: { insetsHandling: 'native', style: 'DARK' },
+    SystemBars: { insetsHandling: 'native', style: 'LIGHT' },
   },
 }
 

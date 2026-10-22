@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
+@SdkSuppress(minSdkVersion = 29)
 public class NativeWindowTest {
     private void assertNoTitleBar(MainActivity activity) {
         assertNull("原生 ActionBar 不应占据网页上方", activity.getSupportActionBar());
@@ -57,6 +59,7 @@ public class NativeWindowTest {
     }
 
     private void screenshot(ActivityScenario<MainActivity> scenario, String name) throws Exception {
+        scenario.onActivity(activity -> assertTrue("截图时应用应位于前台，不能被系统弹窗遮挡", activity.hasWindowFocus()));
         CountDownLatch drawn = new CountDownLatch(1);
         scenario.onActivity(activity -> activity.getBridge().getWebView().postVisualStateCallback(1, new WebView.VisualStateCallback() {
             @Override public void onComplete(long requestId) { drawn.countDown(); }

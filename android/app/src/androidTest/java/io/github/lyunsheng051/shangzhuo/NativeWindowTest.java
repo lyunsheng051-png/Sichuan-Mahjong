@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.webkit.WebView;
 import android.view.View;
 import android.view.Window;
 import androidx.test.core.app.ActivityScenario;
@@ -17,6 +18,8 @@ import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,22 +56,37 @@ public class NativeWindowTest {
         fail("页面或安卓退出入口未加载");
     }
 
-    private void screenshot(String name) throws Exception {
+    private void screenshot(ActivityScenario<MainActivity> scenario, String name) throws Exception {
+        CountDownLatch drawn = new CountDownLatch(1);
+        scenario.onActivity(activity -> activity.getBridge().getWebView().postVisualStateCallback(1, new WebView.VisualStateCallback() {
+            @Override public void onComplete(long requestId) { drawn.countDown(); }
+        }));
+        assertTrue("等待网页绘制超时", drawn.await(15, TimeUnit.SECONDS));
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         SystemClock.sleep(500);
+        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+        assertNotNull(bitmap);
+        Set<Integer> colors = new HashSet<>();
+        for (int y = bitmap.getHeight() / 8; y < bitmap.getHeight() * 7 / 8; y += 20) {
+            for (int x = 0; x < bitmap.getWidth(); x += 20) colors.add(bitmap.getPixel(x, y));
+        }
+        assertTrue("应用画面不应为空白", colors.size() > 8);
         // UTP 完成测试后会卸载 App；公共媒体目录中的截图仍能由 runner 导出。
         ContentResolver resolver = InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver();
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.DISPLAY_NAME, name);
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
         values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ShangzhuoNativeUi");
-        Uri image = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        values.put(MediaStore.Images.Media.IS_PENDING, 1);
+        Uri image = resolver.insert(MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), values);
         assertNotNull(image);
-        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-        assertNotNull(bitmap);
         try (OutputStream output = resolver.openOutputStream(image)) {
             assertNotNull(output);
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, output));
         } finally { bitmap.recycle(); }
+        values.clear();
+        values.put(MediaStore.Images.Media.IS_PENDING, 0);
+        resolver.update(image, values, null, null);
     }
 
     @Test
@@ -76,7 +94,7 @@ public class NativeWindowTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             awaitPage(scenario);
             scenario.onActivity(this::assertNoTitleBar);
-            screenshot("landscape-home.png");
+            screenshot(scenario, "landscape-home.png");
             scenario.recreate();
             awaitPage(scenario);
             scenario.onActivity(this::assertNoTitleBar);
@@ -90,7 +108,7 @@ public class NativeWindowTest {
             assertEquals("true", js(scenario, "(() => { const r = document.querySelector('[data-testid=exit-app]').getBoundingClientRect(); return r.width > 0 && r.top >= 0 && r.bottom <= innerHeight; })()"));
             js(scenario, "document.querySelector('[data-testid=exit-app]').click()");
             assertEquals("true", js(scenario, "document.querySelector('.exit-dialog').open"));
-            screenshot("exit-dialog.png");
+            screenshot(scenario, "exit-dialog.png");
             js(scenario, "document.querySelector('[data-testid=cancel-exit]').click()");
             assertEquals("false", js(scenario, "document.querySelector('.exit-dialog').open"));
             js(scenario, "localStorage.setItem('exit-regression', 'keep'); document.querySelector('[data-testid=exit-app]').click()");

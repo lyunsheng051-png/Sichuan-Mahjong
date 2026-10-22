@@ -1,5 +1,7 @@
 # 上桌 · 川麻练习室
 
+<img src="assets/branding/icon-preview.png" alt="上桌应用图标：玉色麻将牌与三筒牌纹" width="96" height="96" />
+
 **把“懂规则”，练成“看得出来”。** 面向初学者的四川麻将缺一门专项训练。
 
 [简体中文](README.md) · [English](README.en.md)
@@ -181,3 +183,4 @@ npm run dev
 - 牌面复用自 [FluffyStuff / riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles)，按原仓库公有领域 / CC0 许可使用，保留了原始许可证和固定提交信息。
 - [luxinghong / sichuan-mahjong-analyzer](https://github.com/luxinghong/sichuan-mahjong-analyzer) 用于功能研究参考，未复制源代码。
 - 应用代码采用 [MIT License](LICENSE)。第三方素材许可单独说明，详见[第三方素材说明](THIRD_PARTY_NOTICES.md)。
+- 新应用图标使用内置图像生成工具制作，原图、安卓适配和生成提示词见[品牌素材说明](assets/branding/README.md)，与第三方牌面素材分别记录。

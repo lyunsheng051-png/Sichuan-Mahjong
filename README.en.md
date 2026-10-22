@@ -1,5 +1,7 @@
 # Shangzhuo · Sichuan Mahjong Trainer
 
+<img src="assets/branding/icon-preview.png" alt="Shangzhuo app icon with jade mahjong tiles and a three-dot face" width="96" height="96" />
+
 **Turn knowing the rules into recognizing the play.** Focused drills for beginners learning Sichuan Mahjong with a missing suit.
 
 [简体中文](README.md) · [English](README.en.md)
@@ -181,3 +183,4 @@ For changes to rules, teaching approach, or substantial interaction flows, consi
 - Tile graphics are reused from [FluffyStuff / riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles) under the original public-domain / CC0 dedication. The original license and pinned source revision are retained.
 - [luxinghong / sichuan-mahjong-analyzer](https://github.com/luxinghong/sichuan-mahjong-analyzer) was consulted for feature research; its source code was not copied.
 - Application code is released under the [MIT License](LICENSE). Asset licensing is documented separately in the [third-party notices](THIRD_PARTY_NOTICES.md), currently in Chinese.
+- The new app icon was created with the built-in image-generation tool. See the [branding notes](assets/branding/README.md) for the source, Android variants, and generation prompt; this artwork is documented separately from the third-party tile graphics.

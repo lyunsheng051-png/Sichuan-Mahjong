@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp" android:height="108dp"
-    android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#286151" android:pathData="M0,0h108v108h-108z" />
-    <path android:fillColor="#CAD7C2" android:pathData="M32,24h44v64h-44z" />
-    <path android:fillColor="#FFFDF3" android:pathData="M32,20h44v62h-44z" />
-    <path android:fillColor="#326849" android:pathData="M51,32h6v32h-6z M57,44h11v6h-11z M39,63h31v6h-31z" />
-</vector>
+<!-- 旧版启动器和启动页使用合成图；自适应图标使用独立前景与背景。 -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/shangzhuo_launcher"
+    android:gravity="fill"
+    android:filter="true" />

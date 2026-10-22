@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 相当于108dp图层每边内缩12dp，用比例确保不同启动器尺寸下留白一致。 -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:inset="11.111111%">
+    <bitmap
+        android:src="@drawable/shangzhuo_foreground_image"
+        android:gravity="fill"
+        android:filter="true" />
+</inset>

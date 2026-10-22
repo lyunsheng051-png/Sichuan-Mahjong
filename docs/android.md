@@ -23,12 +23,14 @@ npm run typecheck
 
 生成离线 APK 必须额外编译网页资源。`android:sync`、`android:apk` 均包含这一步，不能把它们当成普通类型检查。手动运行云端打包工作流时，会执行这项必要编译。
 
+后续约定：修复完成后直接打包 APK，不运行云端安卓模拟器、UI 回归或截图验证，手机安装效果由用户自行验证。
+
 ## GitHub Actions 云端打包（推荐）
 
 无需在自己的电脑上配置 JDK 21 或 Android SDK。仓库提供手动触发的 [Android APK 工作流](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml)，使用 GitHub 的 Ubuntu 24.04 标准 runner，Node.js 24、JDK 21 和 Android SDK Platform 36。
 
 1. 登录 GitHub，打开仓库的 **Actions → Android APK**。
-2. 点击 **Run workflow**，选择要打包的分支，再点击运行。需要原生界面回归验证时，勾选 `verify_native_ui`；工作流会额外启动 Android 35 模拟器，检查启动与重建后无原生标题栏、退出入口可见、取消退出、确认关闭及重开后本地存储保留，并保存截图与测试报告。
+2. 点击 **Run workflow**，选择要打包的分支，再点击运行。工作流仅编译打包，不运行安卓模拟器、UI 回归或截图验证；安装后的显示与交互由使用者在手机上验证。
 3. 等待运行成功，打开该次运行，找到底部的 **Artifacts**。
 4. 下载 `shangzhuo-android-0.1.1-运行序号` ZIP，解压得到 `shangzhuo-0.1.1-debug.apk` 和 `SHA256SUMS.txt`。
 5. 将 APK 传到手机安装。附件保存7天，过期后重新运行工作流即可。
@@ -70,6 +72,7 @@ artifacts/shangzhuo-0.1.1-debug.apk
 ## v0.1.1 修复
 
 - 修正启动主题：不再将启动图设置为所有控件的背景；在窗口创建前安装 AndroidX SplashScreen，并统一使用无标题栏主题，处理顶部出现重复图标与名称的白色横条。
+- 修正浅色背景下系统状态栏文字的对比度。退出入口使用 SVG 图标，避免手机字体缺字显示成方框。
 - 安卓导航栏底部新增固定的“退出”按钮。确认后关闭 Activity；取消后继续练习，退出弹窗打开期间暂停看牌倒计时。已保存的练习记录保留，未提交答案不保存。
 - 版本号升级为 `0.1.1` / `2`，保持原包名和固定签名，可直接覆盖 v0.1.0。
 
@@ -87,7 +90,7 @@ artifacts/shangzhuo-0.1.1-debug.apk
 - 浏览器核对740×360、844×390横屏：手牌完整显示、按花色切换保留选择、提交判分、解析区滚动与底部下一题按钮。
 - 核对设置弹层打开和关闭，以及390×844竖屏、1024×768桌面布局兼容。
 - 2026-10-22：[v0.1.0 云端构建成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39722626363)，完成离线网页编译、Capacitor 同步、Gradle 原生编译、APK 签名验证及固定签名证书比对；输出附件 `shangzhuo-android-0.1.0-3`。
-- 已核对包名 `io.github.lyunsheng051.shangzhuo`、版本 `0.1.0` / `1`、最低 API 24 和 target API 36。尚未做安卓真机验证。
+- v0.1.1 安装包约5.21 MB，已核对包名、版本 `0.1.1` / `2`、离线资源与 SHA256。华为等实际设备的显示效果仍需安装核对。
 
 ## 参考
 

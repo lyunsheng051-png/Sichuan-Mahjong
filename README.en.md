@@ -132,9 +132,7 @@ The repository includes a Capacitor 8 native project, app icon, and launch-scree
 
 The web layout has been checked in 740×360 and 844×390 browser viewports. Hints and settings open in a dialog that pauses the study countdown. Long explanations scroll inside the right panel while the next-question button stays at the bottom.
 
-**Verified build:** [2026-10-22 · v0.1.0](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39722626363) passed the cloud native build, APK signature verification, and certificate comparison against the persistent signing key. Android-device testing has not been completed.
-
-v0.1.1 corrects the Android launch theme that caused the icon banner and adds a pinned Exit button with confirmation. It retains the package ID and signing key for in-place updates.
+v0.1.1 corrects the Android launch theme that caused the icon banner and adds a pinned Exit button with confirmation. It retains the package ID and signing key for in-place updates. Future fixes go directly to packaging without cloud emulator or UI regression runs; users verify the installed application.
 
 **Cloud build:** open the [Android APK workflow](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml), select **Run workflow**, then download `shangzhuo-android-0.1.1-…` from the successful run’s **Artifacts**. Extract the ZIP and transfer the APK to your phone to install it. Artifacts expire after seven days; rerun the workflow to create a new download.
 

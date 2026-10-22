@@ -104,10 +104,7 @@ jobs:
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          script: |
-            sh ./android/gradlew -p android connectedDebugAndroidTest --no-daemon
-            mkdir -p .tools/native-ui
-            adb pull /sdcard/Android/data/io.github.lyunsheng051.shangzhuo/files/native-ui/. .tools/native-ui/
+          script: sh scripts/android-ui-check.sh
 
       - name: Upload native UI evidence
         if: always() && inputs.verify_native_ui
@@ -115,7 +112,7 @@ jobs:
         with:
           name: shangzhuo-native-ui-${{ steps.app.outputs.version }}-${{ github.run_number }}
           path: |
-            .tools/native-ui/
+            artifacts/native-ui/
             android/app/build/outputs/androidTest-results/connected/
             android/app/build/reports/androidTests/connected/
           retention-days: 7

@@ -134,6 +134,8 @@ The web layout has been checked in 740×360 and 844×390 browser viewports. Hint
 
 v0.1.1 corrects the Android launch theme that caused the icon banner and adds a pinned Exit button with confirmation. It retains the package ID and signing key for in-place updates. Future fixes go directly to packaging without cloud emulator or UI regression runs; users verify the installed application.
 
+[v0.1.1 build and download](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39727492072). APK compilation is complete; users verify display and interaction after installation.
+
 **Cloud build:** open the [Android APK workflow](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml), select **Run workflow**, then download `shangzhuo-android-0.1.1-…` from the successful run’s **Artifacts**. Extract the ZIP and transfer the APK to your phone to install it. Artifacts expire after seven days; rerun the workflow to create a new download.
 
 The workflow uses Ubuntu, JDK 21, and Android SDK Platform 36. It checks types, compiles the offline assets, verifies the APK signature, and includes a SHA256 checksum. The signing key is stored in a repository Secret and is excluded from source code and downloadable artifacts. Android-device testing has not been completed. See the [Android guide](docs/android.md) for setup, installation, and signed updates; that supporting guide is currently in Chinese.

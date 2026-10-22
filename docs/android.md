@@ -90,6 +90,7 @@ artifacts/shangzhuo-0.1.1-debug.apk
 - 浏览器核对740×360、844×390横屏：手牌完整显示、按花色切换保留选择、提交判分、解析区滚动与底部下一题按钮。
 - 核对设置弹层打开和关闭，以及390×844竖屏、1024×768桌面布局兼容。
 - 2026-10-22：[v0.1.0 云端构建成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39722626363)，完成离线网页编译、Capacitor 同步、Gradle 原生编译、APK 签名验证及固定签名证书比对；输出附件 `shangzhuo-android-0.1.0-3`。
+- 2026-10-22：[v0.1.1 打包成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39727492072)，本次未运行云端模拟器或 UI 测试，输出附件 `shangzhuo-android-0.1.1-9`。
 - v0.1.1 安装包约5.21 MB，已核对包名、版本 `0.1.1` / `2`、离线资源与 SHA256。华为等实际设备的显示效果仍需安装核对。
 
 ## 参考

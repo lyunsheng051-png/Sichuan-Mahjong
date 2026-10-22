@@ -1,0 +1,162 @@
+/* 横屏手机：导航、牌桌、作答区各自分工，长解析只在右栏内滚动。 */
+.training-heading-actions { display: flex; align-items: center; gap: 18px; }
+.suit-tabs { display: none; }
+.coach-toggle, .coach-close { display: none; }
+.coach-dialog { padding: 0; border: 1px solid var(--line); border-radius: 12px; width: min(560px, calc(100vw - 40px)); max-height: calc(100dvh - 28px); color: var(--ink); background: var(--paper); }
+.coach-dialog::backdrop { background: #102a25b3; }
+.coach-dialog .coach-panel { display: block; border: 0; }
+.coach-dialog .coach-close { display: block; float: right; padding: 8px 14px; border: 1px solid var(--line); border-radius: 5px; background: white; }
+.native-app body { overscroll-behavior: none; }
+.native-app .app-shell { min-height: 100dvh; }
+
+@media (orientation: landscape) and (max-height: 650px) and (max-width: 1400px) {
+  :root { --rail-width: 62px; }
+  body { padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+  .app-shell { display: flex; min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+  .sidebar { position: fixed; inset: env(safe-area-inset-top, 0px) auto env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); width: var(--rail-width); padding: 8px 5px; overflow-y: auto; border-bottom: 0; border-right: 1px solid var(--line); scrollbar-width: none; }
+  .brand { justify-content: center; }
+  .brand > span:not(.brand-seal), .nav-caption, .sidebar-bottom, .nav-link .nav-label { display: none; }
+  .brand-seal { width: 29px; height: 34px; font-size: 23px; }
+  .sidebar nav { display: flex; flex-direction: column; overflow: visible; gap: 2px; margin-top: 8px; padding: 0; }
+  .sidebar nav[aria-label='学习工具'] { margin-top: 0; }
+  .nav-link { flex-direction: column; justify-content: center; gap: 1px; padding: 3px; min-height: 37px; font-size: 10px; }
+  .nav-link > span:first-child { display: block; width: auto; font-size: 17px; line-height: 18px; }
+  .nav-link > .nav-short { display: block; font-size: 9px; line-height: 12px; color: inherit; width: auto; }
+  .sidebar nav[aria-label='学习工具'] .nav-link { flex-direction: row; gap: 5px; min-height: 26px; padding: 3px; }
+  .sidebar nav[aria-label='学习工具'] .nav-link > span:first-child { font-size: 14px; }
+  .nav-divider { display: block; margin: 6px 7px; }
+  .main-shell { margin-left: var(--rail-width); width: calc(100% - var(--rail-width)); }
+  .topbar { height: 29px; padding: 0 16px; font-size: 9px; }
+  main { padding: 18px; min-height: calc(100dvh - 90px); }
+  .page-heading { margin-bottom: 15px; }
+  h1, .page-heading.compact h1 { font-size: 25px; }
+  .page-heading .muted { margin-top: 5px; font-size: 11px; }
+  .eyebrow { margin-bottom: 4px; font-size: 9px; }
+  .app-footer { height: auto; margin: 0 18px; padding: 12px 0; }
+  .hero-table { min-height: 230px; padding: 23px; grid-template-columns: 1.2fr 1fr; }
+  .hero-copy h2 { font-size: 25px; }
+  .hero-copy p { font-size: 11px; margin: 10px 0 16px; }
+  .hero-tiles { display: flex; }
+  .hero-tiles .tile { width: 31px; }
+  .stats-strip { padding: 15px 0; margin-bottom: 22px; }
+  .drill-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .drill-card { padding: 16px; }
+  .card-top { margin-bottom: 10px; }
+  .drill-card p { min-height: 35px; }
+  .card-bottom { margin-top: 12px; padding-top: 10px; }
+
+  /* 训练页固定为一个视窗，退出训练后恢复普通页面滚动。 */
+  .is-training { height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); min-height: 0; }
+  .is-training .main-shell { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+  .is-training .topbar, .is-training .app-footer { display: none; }
+  .is-training main { flex: 1; min-height: 0; width: 100%; padding: 10px 14px 12px; display: flex; flex-direction: column; overflow: hidden; }
+  .training-heading { flex-shrink: 0; min-height: 43px; margin-bottom: 9px; gap: 10px; }
+  .training-heading h1 { display: inline; font-size: 22px; }
+  .training-heading .eyebrow, .training-heading .muted { display: none; }
+  .training-heading-actions { gap: 14px; }
+  .session-counter { font-size: 9px; }
+  .session-counter strong { font-size: 21px; }
+  .session-counter > span { display: inline; margin-left: 12px; }
+  .coach-toggle { display: inline-flex; align-items: center; min-height: 36px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 6px; background: #fff; font-size: 11px; }
+  .training-layout { display: block; flex: 1; min-height: 0; }
+  .training-main { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) clamp(275px, 36vw, 370px); grid-template-rows: minmax(0, 1fr); gap: 12px; }
+  .coach-host { display: none; }
+  .practice-table { grid-column: 1; grid-row: 1; min-height: 0; height: 100%; padding: 14px 10px 9px; display: grid; grid-template-rows: auto minmax(55px, 1fr) auto auto; align-items: center; }
+  .table-meta { gap: 7px; }
+  .table-tag { font-size: 9px; letter-spacing: .04em; }
+  .missing-badge { padding: 3px 6px; font-size: 10px; }
+  .table-center { height: 100%; min-height: 55px; gap: 4px; }
+  .table-instruction { font-size: 11px; text-align: center; }
+  .table-center > .tile { width: clamp(34px, 9vh, 52px); }
+  .table-center small { font-size: 8px; }
+  .table-watermark { font-size: 85px; }
+  .practice-table > .tile-hand { padding: 9px 2px; gap: 2px; width: 100%; overflow-x: auto; scrollbar-width: thin; }
+  .practice-table > .tile-hand .tile { width: auto; min-width: 0; max-width: 45px; flex: 1 1 0; }
+  .table-controls { min-height: 32px; padding-top: 4px; font-size: 9px; }
+  .table-action { min-height: 32px; padding: 5px 8px; font-size: 10px; }
+  .answer-panel, .feedback-panel { grid-column: 2; grid-row: 1; min-height: 0; height: 100%; margin: 0; padding: 14px 12px; overflow-y: auto; overscroll-behavior: contain; }
+  .answer-panel { display: flex; flex-direction: column; }
+  .answer-panel .section-heading { margin-bottom: 8px; align-items: flex-start; gap: 6px; }
+  .answer-panel .section-heading h2 { font-size: 13px; line-height: 1.65; }
+  .answer-panel .section-heading > span { font-size: 9px; }
+  .answer-panel > .muted { font-size: 11px; }
+  .picker-row { gap: 7px; }
+  .suit-label { font-size: 14px; }
+  .tile-picker { gap: 3px; }
+  .picker-row .tile-hand { gap: 4px; padding: 6px 3px; }
+  .picker-row .tile.small { width: clamp(21px, 2.8vw, 30px); }
+  .answer-help { font-size: 9px; line-height: 1.6; margin-top: 8px; }
+  .answer-actions { margin-top: auto; padding-top: 10px; gap: 8px; flex-wrap: nowrap; }
+  .answer-actions .button { min-height: 40px; min-width: 0; padding: 8px 11px; font-size: 11px; gap: 4px; flex: 1; white-space: nowrap; }
+  .answer-actions .button-quiet { font-size: 10px; padding: 7px 2px; white-space: nowrap; flex-shrink: 0; }
+  .hint-box { margin-top: 7px; padding: 8px; font-size: 10px; }
+  .claim-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+  .choice-button { min-height: 60px; padding: 10px; font-size: 15px; }
+  .is-answered .answer-panel { display: none; }
+  .feedback-panel { display: flex; flex-direction: column; overflow: hidden; gap: 8px; }
+  .feedback-content { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 2px; }
+  .feedback-title { gap: 6px; }
+  .feedback-title h2 { font-size: 14px; }
+  .feedback-title > span:first-child { font-size: 19px; }
+  .feedback-panel p { font-size: 11px; margin: 11px 0; line-height: 1.8; }
+  .feedback-panel .tag { font-size: 8px; }
+  .feedback-panel .shape-groups { gap: 5px; margin: 10px 0; }
+  .feedback-panel .tile.small { width: 25px; }
+  .feedback-panel .shape-groups .tile-hand { gap: 2px; padding: 5px 3px; }
+  .feedback-panel > .button { margin-top: 0; min-height: 40px; width: 100%; font-size: 12px; flex-shrink: 0; }
+  .explain-options { gap: 5px; margin: 10px 0; }
+  .mini-option { padding: 6px 8px; font-size: 10px; }
+  .coach-dialog { width: min(620px, calc(100vw - 120px)); }
+  .coach-dialog .coach-panel { padding: 20px 26px; }
+  .coach-dialog .coach-panel h3 { font-size: 20px; }
+  .coach-dialog .setting { font-size: 13px; min-height: 34px; }
+  .coach-dialog .setting input { width: 22px; height: 22px; }
+  .record-card { padding: 15px 20px; }
+  .guide-intro { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .guide-intro h2 { font-size: 18px; }
+  .pattern-grid { grid-template-columns: repeat(4, 1fr); }
+  .lab-hand { min-height: 95px; }
+}
+
+@media (orientation: landscape) and (max-height: 390px) and (max-width: 1400px) {
+  .sidebar { padding: 6px 5px; }
+  .brand-seal { height: 30px; }
+  .sidebar nav { gap: 1px; margin-top: 5px; }
+  .nav-link { min-height: 33px; padding: 2px 3px; }
+  .nav-link > span:first-child { line-height: 16px; }
+  .nav-link > .nav-short { line-height: 11px; }
+  .nav-divider { margin: 3px 7px; }
+  .sidebar nav[aria-label='学习工具'] .nav-link { min-height: 24px; }
+  .is-training main { padding: 6px 10px 8px; }
+  .training-heading { min-height: 35px; margin-bottom: 6px; }
+  .training-heading h1 { font-size: 19px; }
+  .training-heading .coach-toggle { min-height: 30px; }
+  .training-main { gap: 9px; grid-template-columns: minmax(0, 1fr) clamp(265px, 37vw, 335px); }
+  .practice-table { padding: 10px 8px 7px; }
+  .answer-panel, .feedback-panel { padding: 10px; }
+  .picker-row .tile.small { width: clamp(21px, 2.8vw, 26px); }
+  .answer-panel .section-heading { margin-bottom: 5px; }
+  .picker-row .tile-hand { padding: 5px 3px; }
+  .answer-help { display: none; }
+  .answer-actions { padding-top: 6px; }
+  .session-counter > span { display: none; }
+}
+
+@media (orientation: landscape) and (max-height: 650px) and (max-width: 1400px) {
+  .answer-panel .suit-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 2px; }
+  .suit-tabs button { min-height: 32px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 5px; background: #f6f8f2; font-size: 12px; }
+  .suit-tabs button span { display: inline-grid; place-items: center; border-radius: 50%; margin-left: 7px; width: 16px; height: 16px; background: var(--green); color: white; font-size: 9px; }
+  .answer-panel .picker-row { display: none; }
+  .answer-panel .picker-row.is-active { display: block; }
+  .answer-panel .suit-label { display: none; }
+  .answer-panel .picker-row .tile-hand { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 5px 3px; }
+  .answer-panel .picker-row .tile.small { width: 100%; height: clamp(38px, 12vh, 53px); aspect-ratio: auto; }
+  .answer-panel .tile-picker { margin-bottom: 3px; }
+  .answer-actions { flex-shrink: 0; position: sticky; bottom: -1px; background: white; }
+}
+
+/* 窄竖屏浏览器仍能正常练习；App自身由原生层请求横屏。 */
+@media (max-width: 700px) and (orientation: portrait) {
+  .sidebar .nav-link > .nav-label { display: inline; }
+  .sidebar .nav-link > .nav-short { display: none; }
+}

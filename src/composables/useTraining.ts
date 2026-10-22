@@ -21,6 +21,7 @@ export function useTraining() {
   const peek = ref(false)
   const phase = ref<'study' | 'answer'>('answer')
   const seconds = ref(0)
+  const studyPaused = ref(false)
   const responseStarted = ref(Date.now())
   const sessionCount = ref(0)
   const sessionCorrect = ref(0)
@@ -41,7 +42,7 @@ export function useTraining() {
     phase.value = mustStudy ? 'study' : 'answer'
     seconds.value = preferences.value.studySeconds
     responseStarted.value = Date.now()
-    if (mustStudy) timer = setInterval(() => { seconds.value--; if (seconds.value <= 0) finishStudy() }, 1000)
+    if (mustStudy) timer = setInterval(() => { if (studyPaused.value) return; seconds.value--; if (seconds.value <= 0) finishStudy() }, 1000)
   }
   watch(() => [route.params.mode, route.query.retry], (current, previous) => {
     if (current[0] !== previous?.[0]) { sessionCount.value = 0; sessionCorrect.value = 0 }
@@ -103,5 +104,6 @@ export function useTraining() {
     explanationTile.value = expected.value[0] ?? null
     addAttempt({ id: crypto.randomUUID(), time: new Date().toISOString(), question: JSON.parse(JSON.stringify(question.value)) as Question, rules: { ...rules.value }, selected: [...selected.value], correct: correct.value, assisted: assisted.value, elapsed: Math.round((Date.now() - responseStarted.value) / 100) / 10 })
   }
-  return { mode, info, preferences, question, rules, selected, answered, correct, assisted, hint, peek, phase, seconds, sessionCount, sessionCorrect, received, afterExchange, explanationTile, hidden, expected, discardDetails, shape, resultText, reset, finishStudy, toggle, showHint, revealHand, submit }
+  function setStudyPaused(paused: boolean) { studyPaused.value = paused }
+  return { mode, info, preferences, question, rules, selected, answered, correct, assisted, hint, peek, phase, seconds, sessionCount, sessionCorrect, received, afterExchange, explanationTile, hidden, expected, discardDetails, shape, resultText, reset, finishStudy, toggle, showHint, revealHand, submit, setStudyPaused }
 }

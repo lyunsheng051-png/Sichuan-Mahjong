@@ -7,13 +7,19 @@
     "dev": "vite --host 127.0.0.1",
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "android:sync": "node scripts/android.mjs sync",
+    "android:apk": "node scripts/android.mjs apk",
+    "android:open": "cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@vitejs/plugin-vue": "^6.0.10",
     "typescript": "5.9.3",
     "vite": "^8.3.5",

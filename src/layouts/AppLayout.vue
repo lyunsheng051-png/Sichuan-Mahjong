@@ -3,9 +3,12 @@ import { useProgress } from '../composables/useProgress'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import NativeExitButton from '../components/NativeExitButton.vue'
+import { useLandscapeLayout } from '../composables/useLandscapeLayout'
 const { todayCount, storageFailed } = useProgress()
 const route = useRoute()
 const isTraining = computed(() => route.path.startsWith('/train/'))
+const { compact } = useLandscapeLayout()
+const oneScreen = computed(() => compact.value && ['/', '/records', '/lab'].includes(route.path))
 const trainingLinks = [
   { to: '/', icon: '⌂', label: '今日练习', short: '首页' },
   { to: '/train/memory', icon: '▦', label: '手牌快照', short: '记牌' },
@@ -21,7 +24,7 @@ const toolLinks = [
 ]
 </script>
 <template>
-  <div class="app-shell" :class="{ 'is-training': isTraining }">
+  <div class="app-shell" :class="{ 'is-training': isTraining, 'landscape-shell': compact, 'workspace-fit': oneScreen }">
     <aside class="sidebar">
       <div class="sidebar-navigation">
       <RouterLink to="/" class="brand"><span class="brand-seal">上</span><span>上桌<span class="brand-sub">川麻练习室</span></span></RouterLink>

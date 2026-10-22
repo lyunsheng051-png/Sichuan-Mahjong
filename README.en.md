@@ -64,7 +64,7 @@ After submitting, inspect each winning tile and one complete, valid decompositio
 | Hand lab | Enter 13 or 14 concealed tiles without declared melds to inspect wins, waits, and ready-making discards |
 | Practice history | Retain the latest 300 attempts, distinguish assisted answers, filter records, and retry the original hand |
 
-History defaults to 10 records per page, with 20 and 50 available. The dashboard reports accuracy for up to the latest 20 unassisted answers in each recognition drill. Using a hint or revealing a hidden hand marks the answer as assisted; exchange legality is excluded from overall unassisted recognition accuracy.
+History defaults to 10 records per page. Landscape phones offer 5 or 10 records; desktop offers 10, 20, or 50. Landscape cards show a compact summary, with full hands available in a details dialog. The dashboard reports accuracy for up to the latest 20 unassisted answers in each recognition drill. Using a hint or revealing a hidden hand marks the answer as assisted; exchange legality is excluded from overall unassisted recognition accuracy.
 
 ## Getting started
 
@@ -132,11 +132,9 @@ The repository includes a Capacitor 8 native project, app icon, and launch-scree
 
 The web layout has been checked in 740×360 and 844×390 browser viewports. Hints and settings open in a dialog that pauses the study countdown. Long explanations scroll inside the right panel while the next-question button stays at the bottom.
 
-v0.1.1 corrects the Android launch theme that caused the icon banner and adds a pinned Exit button with confirmation. It retains the package ID and signing key for in-place updates. Future fixes go directly to packaging without cloud emulator or UI regression runs; users verify the installed application.
+v0.1.2 adds single-screen landscape workspaces for the dashboard, history, and hand lab. Statistics and all five drills share the dashboard; history uses paginated summary cards and a hand-details dialog; the lab places input and analysis side by side with tabs for waits and decompositions. Primary controls remain inside the viewport. The package ID and signing key are retained for in-place updates. Future fixes go directly to packaging without cloud emulator or UI regression runs; users verify the installed application.
 
-[v0.1.1 build and download](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39727492072). APK compilation is complete; users verify display and interaction after installation.
-
-**Cloud build:** open the [Android APK workflow](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml), select **Run workflow**, then download `shangzhuo-android-0.1.1-…` from the successful run’s **Artifacts**. Extract the ZIP and transfer the APK to your phone to install it. Artifacts expire after seven days; rerun the workflow to create a new download.
+**Cloud build:** open the [Android APK workflow](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml), select **Run workflow**, then download `shangzhuo-android-0.1.2-…` from the successful run’s **Artifacts**. Extract the ZIP and transfer the APK to your phone to install it. Artifacts expire after seven days; rerun the workflow to create a new download.
 
 The workflow uses Ubuntu, JDK 21, and Android SDK Platform 36. It checks types, compiles the offline assets, verifies the APK signature, and includes a SHA256 checksum. The signing key is stored in a repository Secret and is excluded from source code and downloadable artifacts. Android-device testing has not been completed. See the [Android guide](docs/android.md) for setup, installation, and signed updates; that supporting guide is currently in Chinese.
 

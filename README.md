@@ -15,7 +15,7 @@
 
 使用 **Vue 3 + Vite + TypeScript**，无需账号、后端或数据库。已提供桌面、手机竖屏兼容和手机横屏布局，并加入 Capacitor 安卓工程。
 
-> 当前横屏版本尚未生成 APK，也未做安卓真机验证。应用界面目前为中文；本仓库提供中英文 README，尚未提供英文界面切换。
+> 可通过 GitHub Actions 云端生成离线横屏 APK，无需在本机安装安卓工具链。尚未做安卓真机验证。应用界面目前为中文；本仓库提供中英文 README，尚未提供英文界面切换。
 
 ## 目录
 
@@ -94,7 +94,7 @@ npm run dev
 | `npm run android:sync` | 编译网页并同步安卓资源 |
 | `npm run android:apk` | 检查原生工具链、编译资源并尝试生成调试 APK |
 
-日常前端验证只运行 `npm run typecheck`。安卓同步与打包还会编译网页资源，不属于普通类型检查；当前暂不执行打包。
+日常前端验证只运行 `npm run typecheck`。安卓同步与打包还会编译网页资源，不属于普通类型检查；云端打包由手动触发的工作流执行。
 
 ## 如何练习
 
@@ -132,7 +132,9 @@ npm run dev
 
 横屏网页已在740×360、844×390浏览器视窗中核对。提示和设置通过弹层打开，期间暂停观察倒计时；长解析只在右栏内滚动，下一题按钮留在栏底。
 
-**当前状态：横屏网页可用，APK 尚未生成，原生编译与真机效果尚未验证。** 后续打包需要 JDK 21、Android SDK Platform 36 及满足配置要求的设备 WebView。完整配置、安装和签名更新说明见[安卓文档](docs/android.md)。
+**云端打包：** 打开 [Android APK 工作流](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml)，点击 **Run workflow**。成功后从该次运行的 **Artifacts** 下载 `shangzhuo-android-0.1.0-…`，解压后将 APK 传到手机安装；附件保存7天，过期可重新运行。
+
+工作流使用 Ubuntu、JDK 21 和 Android SDK Platform 36，先检查类型，再编译离线资源并校验 APK 签名，附带 SHA256 校验文件。签名密钥保存在仓库 Secret 中，不包含在源码或下载附件里。尚未做安卓真机验证。完整配置、安装和签名更新说明见[安卓文档](docs/android.md)。
 
 ## 数据与隐私
 

@@ -15,7 +15,7 @@ Know the rules, but miss a peng or kong opportunity, or fail to notice that your
 
 Built with **Vue 3, Vite, and TypeScript**, with no account, backend, or database required. Desktop, portrait mobile, and landscape mobile layouts are available, alongside a Capacitor Android project.
 
-> The current landscape version has no generated APK and has not been tested on an Android device. The application UI is Chinese; this repository provides bilingual READMEs, not an English UI switch.
+> Build an offline landscape APK with GitHub Actions without installing a local Android toolchain. Android-device testing has not been completed. The application UI is Chinese; this repository provides bilingual READMEs, not an English UI switch.
 
 ## Contents
 
@@ -94,7 +94,7 @@ Open the local URL printed by Vite, usually `http://127.0.0.1:5173/`. If the por
 | `npm run android:sync` | Compile web assets and synchronize the Android project |
 | `npm run android:apk` | Check the native toolchain, compile assets, and attempt a debug APK build |
 
-Routine frontend validation uses only `npm run typecheck`. Android synchronization and packaging also compile web assets and are separate from type checking. Packaging is currently deferred.
+Routine frontend validation uses only `npm run typecheck`. Android synchronization and packaging also compile web assets and are separate from type checking. Cloud packaging runs through a manually triggered workflow.
 
 ## Suggested practice
 
@@ -132,7 +132,9 @@ The repository includes a Capacitor 8 native project, app icon, and launch-scree
 
 The web layout has been checked in 740×360 and 844×390 browser viewports. Hints and settings open in a dialog that pauses the study countdown. Long explanations scroll inside the right panel while the next-question button stays at the bottom.
 
-**Status: landscape web UI available; no APK generated, no native build verified, and no device testing completed.** Future packaging requires JDK 21, Android SDK Platform 36, and a device WebView meeting the configured requirements. See the [Android guide](docs/android.md) for setup, installation, and signed updates; that supporting guide is currently in Chinese.
+**Cloud build:** open the [Android APK workflow](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml), select **Run workflow**, then download `shangzhuo-android-0.1.0-…` from the successful run’s **Artifacts**. Extract the ZIP and transfer the APK to your phone to install it. Artifacts expire after seven days; rerun the workflow to create a new download.
+
+The workflow uses Ubuntu, JDK 21, and Android SDK Platform 36. It checks types, compiles the offline assets, verifies the APK signature, and includes a SHA256 checksum. The signing key is stored in a repository Secret and is excluded from source code and downloadable artifacts. Android-device testing has not been completed. See the [Android guide](docs/android.md) for setup, installation, and signed updates; that supporting guide is currently in Chinese.
 
 ## Data and privacy
 

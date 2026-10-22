@@ -21,7 +21,29 @@ App 和桌面浏览器是独立的数据空间，不会自动搬运现有浏览�
 npm run typecheck
 ```
 
-生成离线 APK 必须额外编译网页资源。`android:sync`、`android:apk` 均包含这一步，不能把它们当成普通类型检查；应在本次打包获得允许后执行。
+生成离线 APK 必须额外编译网页资源。`android:sync`、`android:apk` 均包含这一步，不能把它们当成普通类型检查。手动运行云端打包工作流时，会执行这项必要编译。
+
+## GitHub Actions 云端打包（推荐）
+
+无需在自己的电脑上配置 JDK 21 或 Android SDK。仓库提供手动触发的 [Android APK 工作流](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/workflows/android-apk.yml)，使用 GitHub 的 Ubuntu 24.04 标准 runner，Node.js 24、JDK 21 和 Android SDK Platform 36。
+
+1. 登录 GitHub，打开仓库的 **Actions → Android APK**。
+2. 点击 **Run workflow**，选择要打包的分支，再点击运行。
+3. 等待运行成功，打开该次运行，找到底部的 **Artifacts**。
+4. 下载 `shangzhuo-android-0.1.0-运行序号` ZIP，解压得到 `shangzhuo-0.1.0-debug.apk` 和 `SHA256SUMS.txt`。
+5. 将 APK 传到手机安装。附件保存7天，过期后重新运行工作流即可。
+
+工作流先执行 `npm ci`、`npm run typecheck`，再运行 `npm run android:apk`，最后用 `apksigner` 验证签名、读取包信息并生成 SHA256 校验文件。仅上传 APK 和校验文件，不上传签名密钥。
+
+### 固定签名与备份
+
+仓库已配置 `ANDROID_DEBUG_KEYSTORE_BASE64` Actions Secret。每次运行恢复同一份调试签名，避免云端临时机器每次产生不同密钥，导致后续无法覆盖安装。Secret 缺失时工作流会直接失败，不会自动改用新签名。
+
+本次密钥的私有备份位于本地未跟踪的 `.tools/android-signing/debug.keystore`，请另行妥善备份该目录；不要提交到 Git、作为 Actions 附件上传或公开分享。别名 `androiddebugkey`，密钥库及密钥密码均为标准调试值 `android`。密码不是保密边界，应保护密钥文件本身。此签名仅用于当前个人练习调试包。
+
+若在 fork 中首次配置，需要自己用 `keytool` 生成密钥，再将整个文件的 Base64 内容保存到 **Settings → Secrets and variables → Actions → New repository secret**，名称为 `ANDROID_DEBUG_KEYSTORE_BASE64`。密钥需符合上述别名和密码；不要复制本仓库的私有密钥。已有安装用户不能随意替换签名。
+
+云端打包仍需 JDK，由工作流自动配置；本机的 Java 17 环境不会被更改。当前工作流不自动发布 GitHub Release，也不上传应用商店。
 
 ## 打包工具链
 
@@ -49,16 +71,16 @@ artifacts/shangzhuo-0.1.0-debug.apk
 
 将真实生成的 APK 通过 USB、聊天文件或其他常用方式传到手机，点击文件安装即可。此版本是个人练习用的调试安装包，不是应用商店发行包。
 
-同包名、同签名的新版 APK 可以覆盖更新并保留 App 数据；不要为了更新先卸载。应保留本机用于签名的 `~/.android/debug.keystore`，切换电脑或重建签名可能导致无法覆盖安装。签名文件与本地 SDK、JDK 均不提交到仓库。
+同包名、同签名的新版 APK 可以覆盖更新并保留 App 数据；不要为了更新先卸载。应保留签名备份，切换电脑或重建签名可能导致无法覆盖安装。若要用本机生成能覆盖云端版本的 APK，需要将同一份备份用于本机的 `~/.android/debug.keystore`，先备份该位置原有文件。签名文件与本地 SDK、JDK 均不提交到仓库。
 
-当前没有添加自动上传 APK 或推送 GitHub 的操作。
+本地脚本只在 `artifacts/` 生成 APK；云端工作流将 APK 上传到该次运行的 Artifacts。
 
 ## 本次验证范围
 
 - `npm run typecheck` 通过。
 - 浏览器核对740×360、844×390横屏：手牌完整显示、按花色切换保留选择、提交判分、解析区滚动与底部下一题按钮。
 - 核对设置弹层打开和关闭，以及390×844竖屏、1024×768桌面布局兼容。
-- 按当前约定暂不打包：未编译网页资源、未执行 Gradle、未生成 APK，也未做安卓真机验证。原生资源的完整同步需要先生成 `dist`，留待后续允许打包时由脚本完成。
+- 已加入云端原生编译与 APK 签名校验流程，实际结果以 Actions 运行记录为准。尚未做安卓真机验证。
 
 ## 参考
 

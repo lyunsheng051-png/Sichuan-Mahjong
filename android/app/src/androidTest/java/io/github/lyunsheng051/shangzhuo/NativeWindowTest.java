@@ -3,14 +3,17 @@ package io.github.lyunsheng051.shangzhuo;
 import static org.junit.Assert.*;
 
 import android.graphics.Bitmap;
+import android.content.ContentValues;
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,11 +55,18 @@ public class NativeWindowTest {
 
     private void screenshot(String name) throws Exception {
         SystemClock.sleep(500);
-        File directory = InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir("native-ui");
-        assertNotNull(directory);
+        // UTP 完成测试后会卸载 App；公共媒体目录中的截图仍能由 runner 导出。
+        ContentResolver resolver = InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, name);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ShangzhuoNativeUi");
+        Uri image = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        assertNotNull(image);
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
         assertNotNull(bitmap);
-        try (FileOutputStream output = new FileOutputStream(new File(directory, name))) {
+        try (OutputStream output = resolver.openOutputStream(image)) {
+            assertNotNull(output);
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, output));
         } finally { bitmap.recycle(); }
     }

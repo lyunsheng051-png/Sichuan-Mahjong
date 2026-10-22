@@ -3,7 +3,7 @@ set -eu
 
 mkdir -p artifacts/native-ui
 collect_screenshots() {
-  adb pull /sdcard/Android/data/io.github.lyunsheng051.shangzhuo/files/native-ui/. artifacts/native-ui/ || true
+  adb pull /sdcard/Pictures/ShangzhuoNativeUi/. artifacts/native-ui/ || true
 }
 trap collect_screenshots EXIT
 

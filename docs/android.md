@@ -80,7 +80,8 @@ artifacts/shangzhuo-0.1.0-debug.apk
 - `npm run typecheck` 通过。
 - 浏览器核对740×360、844×390横屏：手牌完整显示、按花色切换保留选择、提交判分、解析区滚动与底部下一题按钮。
 - 核对设置弹层打开和关闭，以及390×844竖屏、1024×768桌面布局兼容。
-- 已加入云端原生编译与 APK 签名校验流程，实际结果以 Actions 运行记录为准。尚未做安卓真机验证。
+- 2026-10-22：[v0.1.0 云端构建成功](https://github.com/lyunsheng051-png/Sichuan-Mahjong/actions/runs/39722626363)，完成离线网页编译、Capacitor 同步、Gradle 原生编译、APK 签名验证及固定签名证书比对；输出附件 `shangzhuo-android-0.1.0-3`。
+- 已核对包名 `io.github.lyunsheng051.shangzhuo`、版本 `0.1.0` / `1`、最低 API 24 和 target API 36。尚未做安卓真机验证。
 
 ## 参考
 

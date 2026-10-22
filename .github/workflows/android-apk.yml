@@ -15,6 +15,8 @@ jobs:
     name: Build offline landscape APK
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    env:
+      SHANGZHUO_DEBUG_KEYSTORE: ${{ github.workspace }}/.tools/cloud-debug.keystore
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -54,16 +56,20 @@ jobs:
             exit 1
           fi
           umask 077
-          mkdir -p "$HOME/.android"
-          printf '%s' "$ANDROID_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
-          keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey > /dev/null
+          mkdir -p "$(dirname "$SHANGZHUO_DEBUG_KEYSTORE")"
+          printf '%s' "$ANDROID_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$SHANGZHUO_DEBUG_KEYSTORE"
+          keytool -list -keystore "$SHANGZHUO_DEBUG_KEYSTORE" -storepass android -alias androiddebugkey > /dev/null
 
       - name: Build offline APK
         run: npm run android:apk
 
       - name: Verify APK and generate checksum
         run: |
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs artifacts/shangzhuo-0.1.0-debug.apk
+          report=$("$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs artifacts/shangzhuo-0.1.0-debug.apk)
+          printf '%s\n' "$report"
+          expected=$(keytool -exportcert -keystore "$SHANGZHUO_DEBUG_KEYSTORE" -storepass android -alias androiddebugkey | sha256sum | cut -d ' ' -f 1)
+          actual=$(printf '%s\n' "$report" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')
+          test "$expected" = "$actual" || { echo 'APK signing certificate differs from the persistent key'; exit 1; }
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging artifacts/shangzhuo-0.1.0-debug.apk
           cd artifacts
           sha256sum shangzhuo-0.1.0-debug.apk > SHA256SUMS.txt
@@ -91,4 +97,4 @@ jobs:
 
       - name: Remove signing key from runner
         if: always()
-        run: rm -f "$HOME/.android/debug.keystore"
+        run: rm -f "$SHANGZHUO_DEBUG_KEYSTORE"

@@ -16,6 +16,18 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        debug {
+            // 云端显式指定密钥，避免 SDK/Gradle 使用其他用户目录中的默认签名。
+            def cloudKeystore = System.getenv('SHANGZHUO_DEBUG_KEYSTORE')
+            if (cloudKeystore) {
+                storeFile file(cloudKeystore)
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

@@ -37,7 +37,7 @@ npm run typecheck
 
 ### 固定签名与备份
 
-仓库已配置 `ANDROID_DEBUG_KEYSTORE_BASE64` Actions Secret。每次运行恢复同一份调试签名，避免云端临时机器每次产生不同密钥，导致后续无法覆盖安装。Secret 缺失时工作流会直接失败，不会自动改用新签名。
+仓库已配置 `ANDROID_DEBUG_KEYSTORE_BASE64` Actions Secret。每次运行恢复同一份调试签名，通过 `SHANGZHUO_DEBUG_KEYSTORE` 显式传入 Gradle，并对比生成 APK 与密钥库的证书摘要。Secret 缺失或证书不符时工作流会直接失败，不会发布改用其他签名的安装包。
 
 本次密钥的私有备份位于本地未跟踪的 `.tools/android-signing/debug.keystore`，请另行妥善备份该目录；不要提交到 Git、作为 Actions 附件上传或公开分享。别名 `androiddebugkey`，密钥库及密钥密码均为标准调试值 `android`。密码不是保密边界，应保护密钥文件本身。此签名仅用于当前个人练习调试包。
 
@@ -71,7 +71,7 @@ artifacts/shangzhuo-0.1.0-debug.apk
 
 将真实生成的 APK 通过 USB、聊天文件或其他常用方式传到手机，点击文件安装即可。此版本是个人练习用的调试安装包，不是应用商店发行包。
 
-同包名、同签名的新版 APK 可以覆盖更新并保留 App 数据；不要为了更新先卸载。应保留签名备份，切换电脑或重建签名可能导致无法覆盖安装。若要用本机生成能覆盖云端版本的 APK，需要将同一份备份用于本机的 `~/.android/debug.keystore`，先备份该位置原有文件。签名文件与本地 SDK、JDK 均不提交到仓库。
+同包名、同签名的新版 APK 可以覆盖更新并保留 App 数据；不要为了更新先卸载。应保留签名备份，切换电脑或重建签名可能导致无法覆盖安装。若要用本机生成能覆盖云端版本的 APK，在打包终端设置 `$env:SHANGZHUO_DEBUG_KEYSTORE` 为同一份备份的绝对路径，再运行 `npm run android:apk`。不设置时，本地 Gradle 使用默认调试签名，与云端签名可能不同。签名文件与本地 SDK、JDK 均不提交到仓库。
 
 本地脚本只在 `artifacts/` 生成 APK；云端工作流将 APK 上传到该次运行的 Artifacts。
 
